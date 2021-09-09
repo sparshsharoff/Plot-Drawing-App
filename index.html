@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>PLOT DRAWING</title>
+	<style>
+		#north{
+			position: absolute;
+			background-color: #f1f1f1;
+			border: 1px solid #d3d3d3;
+			text-align: center;
+			left: 5%;
+			top: 5%;		
+		 	display: none;		
+		  	padding: 0px 5px;
+		}
+		.road{
+			position: absolute;
+			text-align: center;
+			left: 35%;
+			top: 40%;		
+			display: none;		
+			padding: 0px 5px;
+		}
+		#northheader{
+			cursor: move;
+		  	color: black;
+		  	font-size: 60px;
+		  	font-family: "Times New Roman"
+		}
+		.roadheader{
+			cursor: move;
+		  	color: black;
+		  	font-size: 22px;
+		  	font-family: "Times New Roman"
+		}
+		#northclose{
+			position: absolute;
+			right:0%;
+			top:0%;
+			color: black;
+		    cursor: pointer;
+			font-size:0.9em;
+			display:none;
+
+		}
+		.roadclose{
+			position: absolute;
+			right:0%;
+			top:0%;
+			color: black;
+		    cursor: pointer;
+			display:none;
+		}
+		.roadright{
+			position: absolute;
+			left:0%;
+			bottom:0%;
+			color: black;
+		    cursor: pointer;
+			display:none;	
+			font-size: 0.7em;
+		}
+		.roadleft{
+			position: absolute;
+			right:0%;
+			bottom:0%;
+			color: black;
+		    cursor: pointer;
+			display:none;		
+			font-size: 0.7em;
+		}
+		#northclose:hover , .roadclose:hover, .roadleft:hover, .roadright:hover{
+			background: #bbb;
+		}
+		.mydiv {
+			position: absolute;
+		  	z-index: 9;
+			background-color: #f1f1f1;
+		  	border: 1px solid #d3d3d3;
+		  	text-align: center;
+		  	left: 40%;
+		  	top: 45%;		
+		  	display: none;		
+		}
+
+		.mydivheader {
+			cursor: move;
+		  	color: #fff;
+		  	padding: 5px;
+		}
+		.close,.minimize,.rotate{
+			color: black;
+		    cursor: pointer;
+			padding: 0px 5px;
+		}
+		#downloadimg{
+			display: none;
+		}
+
+		canvas{
+		}
+		body{
+			margin:0;
+		}
+		
+	</style>	
+
+	<script type="text/javascript" src="dat.gui/build/dat.gui.js"> </script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script type="text/javascript">var angle=[0,0,0,0,0,0,0,0]; var roadangle=[0,0,0,0]</script>
+</head>
+<body>
+
+	<div id="north" onmouseover='document.getElementById("northclose").style.display="inline"' 
+	onmouseout='document.getElementById("northclose").style.display="none";'>
+		<div id="northheader">
+			<strong>N</strong>
+		</div>
+		<span id="northclose" onclick='document.getElementById("north").style.display="none";'>&times;</span>
+	</div>
+
+
+
+	<div id="road1" class="road" onmouseover='document.getElementById("roadclose1").style.display="inline";document.getElementById("roadright1").style.display="inline";document.getElementById("roadleft1").style.display="inline"' 
+	onmouseout='document.getElementById("roadclose1").style.display="none";document.getElementById("roadright1").style.display="none";document.getElementById("roadleft1").style.display="none";'>
+		<div id="roadheader1" class="roadheader">
+		<div>Road</div>
+		<div style="font-size: 5px; font-weight: bold">_____________________________________________________________________
+		</div>	
+		</div>
+		<span id="roadright1" class ="roadright" onclick='roadangle[0]+=15;
+	  		this.parentElement.style.transform="rotate("+roadangle[0]+"deg)";'>
+	  		<i class="fa fa-rotate-right"></i></span>
+	  	<span id="roadleft1" class ="roadleft" onclick='roadangle[0]-=15;
+	  		this.parentElement.style.transform="rotate("+roadangle[0]+"deg)";'>
+	  		<i class="fa fa-rotate-left"></i></span>
+		<span id="roadclose1" class="roadclose" onclick='document.getElementById("road1").style.display="none";'><strong>&times;</strong></span>
+	</div>
+	<div id="road2" class="road" onmouseover='document.getElementById("roadclose2").style.display="inline";document.getElementById("roadright2").style.display="inline";document.getElementById("roadleft2").style.display="inline"' 
+	onmouseout='document.getElementById("roadclose2").style.display="none";document.getElementById("roadright2").style.display="none";document.getElementById("roadleft2").style.display="none";'>
+		<div id="roadheader2" class="roadheader">
+		<div>Road</div>
+		<div style="font-size: 5px; font-weight: bold">_____________________________________________________________________
+		</div>	
+		</div>
+		<span id="roadright2" class ="roadright" onclick='roadangle[1]+=15;
+	  		this.parentElement.style.transform="rotate("+roadangle[1]+"deg)";'>
+	  		<i class="fa fa-rotate-right"></i></span>
+	  	<span id="roadleft2" class ="roadleft" onclick='roadangle[1]-=15;
+	  		this.parentElement.style.transform="rotate("+roadangle[1]+"deg)";'>
+	  		<i class="fa fa-rotate-left"></i></span>
+		<span id="roadclose2" class="roadclose" onclick='document.getElementById("road2").style.display="none";'><strong>&times;</strong></span>
+	</div>
+	<div id="road3" class="road" onmouseover='document.getElementById("roadclose3").style.display="inline";document.getElementById("roadright3").style.display="inline";document.getElementById("roadleft3").style.display="inline"' 
+	onmouseout='document.getElementById("roadclose3").style.display="none";document.getElementById("roadright3").style.display="none";document.getElementById("roadleft3").style.display="none";'>
+		<div id="roadheader3" class="roadheader">
+		<div>Road</div>
+		<div style="font-size: 5px; font-weight: bold">_____________________________________________________________________
+		</div>	
+		</div>
+		<span id="roadright3" class ="roadright" onclick='roadangle[2]+=15;
+	  		this.parentElement.style.transform="rotate("+roadangle[2]+"deg)";'>
+	  		<i class="fa fa-rotate-right"></i></span>
+	  	<span id="roadleft3" class ="roadleft" onclick='roadangle[2]-=15;
+	  		this.parentElement.style.transform="rotate("+roadangle[2]+"deg)";'>
+	  		<i class="fa fa-rotate-left"></i></span>
+		<span id="roadclose3" class="roadclose" onclick='document.getElementById("road3").style.display="none";'><strong>&times;</strong></span>
+	</div>
+	<div id="road4" class="road" onmouseover='document.getElementById("roadclose4").style.display="inline";document.getElementById("roadright4").style.display="inline";document.getElementById("roadleft4").style.display="inline"' 
+	onmouseout='document.getElementById("roadclose4").style.display="none";document.getElementById("roadright4").style.display="none";document.getElementById("roadleft4").style.display="none";'>
+		<div id="roadheader4" class="roadheader">
+		<div>Road</div>
+		<div style="font-size: 5px; font-weight: bold">_____________________________________________________________________
+		</div>
+		</div>
+		<span id="roadright4" class ="roadright" onclick='roadangle[3]+=15;
+	  		this.parentElement.style.transform="rotate("+roadangle[3]+"deg)";'>
+	  		<i class="fa fa-rotate-right"></i></span>
+	  	<span id="roadleft4" class ="roadleft" onclick='roadangle[3]-=15;
+	  		this.parentElement.style.transform="rotate("+roadangle[3]+"deg)";'>
+	  		<i class="fa fa-rotate-left"></i></span>
+		<span id="roadclose4" class="roadclose" onclick='document.getElementById("road4").style.display="none";'><strong>&times;</strong></span>
+	</div>
+
+
+	<div id="mydiv1" class="mydiv">
+		<div id="mydivheader1" class="mydivheader">	  	
+			<span class ="comment" id="comment1" onmouseover='document.getElementById(this.id + "body").style.display="inline"'><i style="color:black; padding-right: 3px" class="fa fa-comments-o"> </i>
+			<span class="commentbody" id="comment1body">
+	  		<input type="text" id="input1" style="min-width:100px; padding: 3px" placeholder="Enter comment" onkeyup="this.size = Math.max(this.value.length, 1)"></input> 
+	  		<span class ="minimize" onclick='this.parentElement.style.display="none";'><i class="fa fa-window-minimize"></i></span>
+	  		<span class ="rotate" onclick='angle[0]+=15;
+	  		this.parentElement.parentElement.parentElement.parentElement.style.transform="rotate("+angle[0]+"deg)";'>
+	  		<i class="fa fa-rotate-right"></i></span>
+	  		<span class ="rotate" onclick='angle[0]-=15;
+	  		this.parentElement.parentElement.parentElement.parentElement.style.transform="rotate("+angle[0]+"deg)";'>
+	  		<i class="fa fa-rotate-left"></i></span>
+	  		<span class ="close" id="close1" onclick='this.parentElement.parentElement.parentElement.style.display="none";'><i class="fa fa-close"></i></span>
+	  		</span>
+	    	</span>
+		</div>  
+	</div>
+	<div id="mydiv2" class="mydiv">
+		<div id="mydivheader2" class="mydivheader">	  	
+			<span class ="comment" id="comment2" onmouseover='document.getElementById(this.id + "body").style.display="inline"'><i style="color:black; padding-right: 3px" class="fa fa-comments-o"></i>
+			<span class="commentbody" id="comment2body">
+	  		<input type="text" id="input2" style="min-width:100px; padding: 3px" placeholder="Enter comment" onkeyup="this.size = Math.max(this.value.length, 1)"></input>  
+	  		<span class ="minimize" onclick='this.parentElement.style.display="none";'><i class="fa fa-window-minimize"></i></span>
+	  		<span class ="rotate" onclick='angle[1]+=15;
+	  		this.parentElement.parentElement.parentElement.parentElement.style.transform="rotate("+angle[0]+"deg)";'>
+	  		<i class="fa fa-rotate-right"></i></span>
+	  		<span class ="rotate" onclick='angle[1]-=15;
+	  		this.parentElement.parentElement.parentElement.parentElement.style.transform="rotate("+angle[0]+"deg)";'>
+	  		<i class="fa fa-rotate-left"></i></span>
+	  		<span class ="close" id="close2" onclick='this.parentElement.parentElement.parentElement.style.display="none";'><i class="fa fa-close"></i></span>
+	  		</span>
+	    	</span>
+		</div>  
+	</div>
+	<div id="mydiv3" class="mydiv">
+		<div id="mydivheader3" class="mydivheader">	  	
+			<span class ="comment" id="comment3" onmouseover='document.getElementById(this.id + "body").style.display="inline"'><i style="color:black; padding-right: 3px" class="fa fa-comments-o"></i>
+			<span class="commentbody" id="comment3body">
+	  		<input type="text" id="input3" style="min-width:100px; padding: 3px" placeholder="Enter comment" onkeyup="this.size = Math.max(this.value.length, 1)"></input>  
+	  		<span class ="minimize" onclick='this.parentElement.style.display="none";'><i class="fa fa-window-minimize"></i></span>
+	  		<span class ="rotate" onclick='angle[2]+=15;
+	  		this.parentElement.parentElement.parentElement.parentElement.style.transform="rotate("+angle[0]+"deg)";'>
+	  		<i class="fa fa-rotate-right"></i></span>
+	  		<span class ="rotate" onclick='angle[2]-=15;
+	  		this.parentElement.parentElement.parentElement.parentElement.style.transform="rotate("+angle[0]+"deg)";'>
+	  		<i class="fa fa-rotate-left"></i></span>
+	  		<span class ="close" id="close3" onclick='this.parentElement.parentElement.parentElement.style.display="none";'><i class="fa fa-close"></i></span>
+	  		</span>
+	    	</span>
+		</div>  
+	</div>
+	<div id="mydiv4" class="mydiv">
+		<div id="mydivheader4" class="mydivheader">	  	
+			<span class ="comment" id="comment4" onmouseover='document.getElementById(this.id + "body").style.display="inline"'><i style="color:black; padding-right: 3px" class="fa fa-comments-o"></i>
+			<span class="commentbody" id="comment4body">
+	  		<input type="text" id="input4" style="min-width:100px; padding: 3px" placeholder="Enter comment" onkeyup="this.size = Math.max(this.value.length, 1)"></input>  
+	  		<span class ="minimize" onclick='this.parentElement.style.display="none";'><i class="fa fa-window-minimize"></i></span>
+	  		<span class ="rotate" onclick='angle[3]+=15;
+	  		this.parentElement.parentElement.parentElement.parentElement.style.transform="rotate("+angle[0]+"deg)";'>
+	  		<i class="fa fa-rotate-right"></i></span>
+	  		<span class ="rotate" onclick='angle[3]-=15;
+	  		this.parentElement.parentElement.parentElement.parentElement.style.transform="rotate("+angle[0]+"deg)";'>
+	  		<i class="fa fa-rotate-left"></i></span>
+	  		<span class ="close" id="close4" onclick='this.parentElement.parentElement.parentElement.style.display="none";'><i class="fa fa-close"></i></span>
+	  		</span>
+	    	</span>
+		</div>  
+	</div>
+	<div id="mydiv5" class="mydiv">
+		<div id="mydivheader5" class="mydivheader">	  	
+			<span class ="comment" id="comment5" onmouseover='document.getElementById(this.id + "body").style.display="inline"'><i style="color:black; padding-right: 3px" class="fa fa-comments-o"></i>
+			<span class="commentbody" id="comment5body">
+	  		<input type="text" id="input5" style="min-width:100px; padding: 3px" placeholder="Enter comment" onkeyup="this.size = Math.max(this.value.length, 1)"></input>  
+	  		<span class ="minimize" onclick='this.parentElement.style.display="none";'><i class="fa fa-window-minimize"></i></span>
+	  		<span class ="rotate" onclick='angle[4]+=15;
+	  		this.parentElement.parentElement.parentElement.parentElement.style.transform="rotate("+angle[0]+"deg)";'>
+	  		<i class="fa fa-rotate-right"></i></span>
+	  		<span class ="rotate" onclick='angle[4]-=15;
+	  		this.parentElement.parentElement.parentElement.parentElement.style.transform="rotate("+angle[0]+"deg)";'>
+	  		<i class="fa fa-rotate-left"></i></span>
+	  		<span class ="close" id="close5" onclick='this.parentElement.parentElement.parentElement.style.display="none";'><i class="fa fa-close"></i></span>
+	  		</span>
+	    	</span>
+		</div>  
+	</div>
+	<div id="mydiv6" class="mydiv">
+		<div id="mydivheader6" class="mydivheader">	  	
+			<span class ="comment" id="comment6" onmouseover='document.getElementById(this.id + "body").style.display="inline"'><i style="color:black; padding-right: 3px" class="fa fa-comments-o"> </i>
+			<span class="commentbody" id="comment6body">
+	  		<input type="text" id="input6" style="min-width:100px; padding: 3px" placeholder="Enter comment" onkeyup="this.size = Math.max(this.value.length, 1)"></input>  
+	  		<span class ="minimize" onclick='this.parentElement.style.display="none";'><i class="fa fa-window-minimize"></i></span>
+	  		<span class ="rotate" onclick='angle[5]+=15;
+	  		this.parentElement.parentElement.parentElement.parentElement.style.transform="rotate("+angle[0]+"deg)";'>
+	  		<i class="fa fa-rotate-right"></i></span>
+	  		<span class ="rotate" onclick='angle[5]-=15;
+	  		this.parentElement.parentElement.parentElement.parentElement.style.transform="rotate("+angle[0]+"deg)";'>
+	  		<i class="fa fa-rotate-left"></i></span>
+	  		<span class ="close" id="close6" onclick='this.parentElement.parentElement.parentElement.style.display="none";'><i class="fa fa-close"></i></span>	  		
+	  		</span>
+	    	</span>
+		</div>  
+	</div>
+	<div id="mydiv7" class="mydiv">
+		<div id="mydivheader7" class="mydivheader">	  	
+			<span class ="comment" id="comment7" onmouseover='document.getElementById(this.id + "body").style.display="inline"'><i style="color:black; padding-right: 3px" class="fa fa-comments-o"> </i>
+			<span class="commentbody" id="comment7body">
+	  		<input type="text" id="input7" style="min-width:100px; padding: 3px" placeholder="Enter comment" onkeyup="this.size = Math.max(this.value.length, 1)"></input>  
+	  		<span class ="minimize" onclick='this.parentElement.style.display="none";'><i class="fa fa-window-minimize"></i></span>
+	  		<span class ="rotate" onclick='angle[6]+=15;
+	  		this.parentElement.parentElement.parentElement.parentElement.style.transform="rotate("+angle[0]+"deg)";'>
+	  		<i class="fa fa-rotate-right"></i></span>
+	  		<span class ="rotate" onclick='angle[6]-=15;
+	  		this.parentElement.parentElement.parentElement.parentElement.style.transform="rotate("+angle[0]+"deg)";'>
+	  		<i class="fa fa-rotate-left"></i></span>
+	  		<span class ="close" id="close7" onclick='this.parentElement.parentElement.parentElement.style.display="none";'><i class="fa fa-close"></i></span>	
+	  		</span>
+	    	</span>
+		</div>  
+	</div>
+	<div id="mydiv8" class="mydiv">
+		<div id="mydivheader8" class="mydivheader">	  	
+			<span class ="comment" id="comment8" onmouseover='document.getElementById(this.id + "body").style.display="inline"'><i style="color:black; padding-right: 3px" class="fa fa-comments-o"> </i>
+			<span class="commentbody" id="comment8body">
+	  		<input type="text" id="input8" style="min-width:100px; padding: 3px" placeholder="Enter comment" onkeyup="this.size = Math.max(this.value.length, 1)"></input>  
+	  		<span class ="minimize" onclick='this.parentElement.style.display="none";'><i class="fa fa-window-minimize"></i></span>
+	  		<span class ="rotate" onclick='angle[7]+=15;
+	  		this.parentElement.parentElement.parentElement.parentElement.style.transform="rotate("+angle[0]+"deg)";'>
+	  		<i class="fa fa-rotate-right"></i></span>
+	  		<span class ="rotate" onclick='angle[7]-=15;
+	  		this.parentElement.parentElement.parentElement.parentElement.style.transform="rotate("+angle[0]+"deg)";'>
+	  		<i class="fa fa-rotate-left"></i></span>
+	  		<span class ="close" id="close8" onclick='this.parentElement.parentElement.parentElement.style.display="none";'><i class="fa fa-close"></i></span>
+	  		</span>
+	    	</span>
+		</div>  
+	</div>
+	<canvas>
+	</canvas>
+	<img src="" id="downloadimg">
+	<script type="text/javascript">
+		window.addEventListener("load", function(){
+
+			window.alert("Double Click to add point, click and drag to view, hold shift to draw straight lines and end polygon");
+			const canvas= document.querySelector('canvas');
+			const c = canvas.getContext('2d');
+			
+			const gui = new dat.gui.GUI();
+			
+			const input = {
+				ClearBoard : function(){
+					ClearCheck = prompt("Are you sure you want to clear the board? (Yes/No) ","Yes");
+					if((ClearCheck=="Yes")||(ClearCheck=="yes")||(ClearCheck=="YES")){
+					    c.clearRect(0,0,canvas.width, canvas.height);
+					    pointsX.splice(0,pc);
+					    pointsY.splice(0,pc);
+					    length.splice(0,pc);
+					    areaAll.splice(0,pc);
+					    pointcount=0;	
+						pc=0;
+						length[0] = [];
+						pointsX[0] = [];
+						pointsY[0] = [];
+						lengthRatio = 0;
+						mchange = false;
+						fchange = false;
+
+					}
+				},
+				Undo : function(){
+					if(pointcount>0){
+						pointsX[pc].pop();
+						pointsY[pc].pop();
+						pointcount--;
+						c.clearRect(0,0,canvas.width, canvas.height);
+						drawAll();
+						if(pointcount!=0){
+							save=false;
+						}
+					}
+					
+				},
+				Units: "metres",
+				AddPolygon : function(){
+					if(save==true){
+
+						if(length[pc].length>2){
+							pc++;
+							// save=false;
+							plot=true;
+							c.beginPath();
+
+							pointcount = 0;
+							length[pc] = [];
+							pointsX[pc] = [];
+							pointsY[pc] = [];
+
+							if(pc==1){
+								input.Area2="";
+								ar.add(input, "Area2").listen();
+							}
+							if(pc==2){
+								input.Area3="";
+								ar.add(input, "Area3").listen();
+							}
+							if(pc==3){
+								input.Area4="";
+								ar.add(input, "Area4").listen();
+							}
+							if(pc==4){
+								input.Area5="";
+								ar.add(input, "Area5").listen();
+							}
+							if(pc==5){
+								input.Area6="";
+								ar.add(input, "Area6").listen();
+							}
+
+						}
+					}
+				},
+				AddNorth : function(){
+					document.getElementById("north").style.display="block";
+					North();
+				},
+				AddRoad : function(){
+					roadcount++;
+					if(roadcount<=4){
+						document.getElementById("road"+roadcount).style.display="block";
+						Road();
+					}
+					else{
+						alert("Maximum road count reached");
+					}
+					
+				},
+				AddComment : function(){
+					cmtcount++;
+					if(cmtcount<=8){
+						document.getElementById("mydiv"+cmtcount).style.display="inline";
+						CheckComment();
+					}
+					else{
+						alert("Maximum comment count reached");
+					}
+					
+				},
+				Download : function(){
+					var img = document.getElementById("downloadimg");
+					img.style.display = 'inline';
+					img.src = canvas.toDataURL("image/png");
+					document.body.appendChild(img);
+				    
+				},
+				Area1: "",
+				fontsize: 15,
+
+			} 
+			gui.add(input, 'ClearBoard');
+			gui.add(input, 'Undo');
+			gui.add(input,'AddPolygon');
+			gui.add(input,'AddRoad');
+			gui.add(input,'AddNorth');
+			gui.add(input,'AddComment');
+			gui.add(input, 'Units', ['metres', 'feet']).onChange(function(unit) {
+				units=unit;
+				if(units=="metres"){
+					mchange=true;
+					unitshort=" m";
+					if((pointcount>1)||(pc>0)){
+						for(var j=0;j<=pc;j++){
+							for(var i=0;i<pointcount;i++){
+								length[j][i]*=0.3048;
+								length[j][i]=length[j][i].toFixed(2);
+							}
+						}
+						lengthRatio*=3.280839895;
+					}
+				}
+				else{
+					fchange=true;
+					unitshort=" ft";
+					if((pointcount>1)||(pc>0)){
+						for(var j=0;j<=pc;j++){
+							for(var i=0;i<pointcount;i++){
+								length[j][i]*=3.280839895;
+								length[j][i]=length[j][i].toFixed(2);
+							}
+						}
+						lengthRatio*=0.3048;
+					}
+
+				}
+				c.clearRect(0,0,canvas.width, canvas.height);
+				if(save==true){
+					Area();
+				}
+				if((pointcount!=0)||(pc>0)){
+					drawAll();
+				}
+
+			});
+
+			gui.add(input, "fontsize").min(5).max(30).step(0.5).onChange(function(){
+				c.clearRect(0,0,canvas.width,canvas.height);
+				drawAll();
+			});
+
+			var ar = gui.addFolder('Areas ');
+
+			ar.add(input, 'Area1').listen();
+
+			ar.open();
+			gui.add(input, 'Download');
+
+			//Resizing Canvas
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+
+			//Variables
+			var plot = false;
+			var save = false;
+			var baseunit = "metres";
+			var units = "metres";
+			var unitshort = " m";
+			var length = [];
+			var pointsX = [];
+			var pointsY = [];
+			var pointcount = 0;
+			var lengthRatio = 0;
+			var pc = 0; 			//polygon count		
+			var areaAll = [];
+			var mchange = false;
+			var fchange = false;
+			var roadcount = 0;
+			var cmtcount = 0;	
+			length[0] = [];
+			pointsX[0] = [];
+			pointsY[0] = [];
+
+			//Functions
+
+			function PlotXY(e){
+				if(!plot) return;
+
+				if(save==true)	return;
+
+				c.clearRect(0,0,canvas.width, canvas.height);
+				
+				var X1 = pointsX[pc][pointcount-1];
+				var X2 = e.clientX;
+				var Y1 = pointsY[pc][pointcount-1];
+				var Y2 = e.clientY;
+
+				if (e.shiftKey) {
+					if((Math.abs(e.clientX-pointsX[pc][0])<10)&&(Math.abs(e.clientY-pointsY[pc][0])<10)){
+						X2 = pointsX[pc][0];
+						Y2 = pointsY[pc][0];
+					}
+					
+					else if(Math.abs(e.clientX-pointsX[pc][pointcount-1])<25){
+						X2 = pointsX[pc][pointcount-1];
+					}
+
+					else if(Math.abs(e.clientY-pointsY[pc][pointcount-1])<25){
+						Y2 = pointsY[pc][pointcount-1];
+					}
+				}
+
+				drawAll();
+				c.lineWidth=1;
+				c.moveTo(pointsX[pc][pointcount-1],pointsY[pc][pointcount-1]);
+				c.strokeStyle="black";
+				c.lineTo(X2,Y2);
+				c.stroke();
+				c.beginPath();
+
+				if((pointcount!=1)||(pc>0)){
+					len = LengthFinder(X1,X2,Y1,Y2)+ unitshort; 
+					c.font = input.fontsize + "px Arial";
+					c.textAlign = "center";
+					c.fillStyle = "red";
+					c.fillText(len, (X1 + X2)/2, 
+						(Y1 + Y2)/2);
+				}
+
+			}
+
+			function startPosition(e){
+				plot= true;
+				PlotXY(e);
+			}
+
+			function savePosition(e){
+
+				if(isNaN(pointcount)){
+					pointcount=0;
+				}
+
+				if (e.shiftKey) {
+					if((Math.abs(e.clientX-pointsX[pc][0])<10)&&(Math.abs(e.clientY-pointsY[pc][0])<10)){
+						c.arc(pointsX[pc][0], pointsY[pc][0], 3, 0, Math.PI * 2, false);
+						pointsX[pc].push(pointsX[pc][0]);
+						pointsY[pc].push(pointsY[pc][0]);
+						save=true;
+						plot=false;
+						c.clearRect(0,0,canvas.width, canvas.height);
+					}
+					
+					else if(Math.abs(e.clientX-pointsX[pc][pointcount-1])<25){
+						c.arc(pointsX[pc][pointcount-1], e.clientY, 3, 0, Math.PI * 2, false);
+						c.beginPath();
+						c.moveTo(pointsX[pc][pointcount-1], e.clientY);
+						pointsX[pc].push(pointsX[pc][pointcount-1]);
+						pointsY[pc].push(e.clientY);
+					}
+
+					else if(Math.abs(e.clientY-pointsY[pc][pointcount-1])<25){
+						c.arc(e.clientX, pointsY[pc][pointcount-1], 3, 0, Math.PI * 2, false);
+						c.beginPath();
+						c.moveTo(e.clientX, pointsY[pc][pointcount-1]);
+						pointsX[pc].push(e.clientX);
+						pointsY[pc].push(pointsY[pc][pointcount-1]);
+					}
+				}
+				else{
+					c.arc(e.clientX, e.clientY, 3, 0, Math.PI * 2, false)
+					pointsX[pc].push(e.clientX);
+					pointsY[pc].push(e.clientY);
+					save=false;	
+				}
+				pointcount++;
+					
+				var X1 = pointsX[pc][pointcount-2];
+				var X2 = pointsX[pc][pointcount-1];
+				var Y1 = pointsY[pc][pointcount-2];
+				var Y2 = pointsY[pc][pointcount-1];
+
+			    if((pointcount==2)&&(pc==0)){
+					length[pc][0] = parseFloat(prompt("Enter length: "));
+					if(isNaN(length[pc][0])||(length[pc][0]<=0)){
+						alert("Please enter a valid length: ");
+						length[pc][0] = parseFloat(prompt("Enter length: "));
+					}
+					length[pc][0] = length[pc][0].toFixed(2);
+					if(pc==0){
+						lengthRatio = LengthFinder(X1,X2,Y1,Y2)/length[pc][0];
+					}	
+				}
+				else if(pointcount!=1){
+					length[pc][pointcount-2] = LengthFinder(X1,X2,Y1,Y2); 
+				}
+
+				if(pointcount>1)
+					LengthShow();
+				
+				if(save==true){
+					Area();
+					drawAll();
+				}
+			}
+			
+			function endPosition(){
+				plot= false;
+				c.beginPath();
+			}
+
+			function clickPosition(e){
+				c.arc(e.clientX, e.clientY, 3, 0, Math.PI * 2, false)
+			}
+			
+			
+
+			function drawAll(){
+
+				for(var j=0;j<=pc;j++){
+
+					for(var i=0;i<pointsX[j].length-1;i++){
+					c.beginPath();
+					c.moveTo(pointsX[j][i],pointsY[j][i]);
+					c.lineWidth=2;
+					c.strokeStyle="black";
+					c.lineTo(pointsX[j][i+1],pointsY[j][i+1]);
+					c.stroke();
+					}
+
+				if((pointcount>1)||(pc>0))
+					LengthShow();
+				}
+			}
+
+			function LengthFinder(X1,X2,Y1,Y2){
+
+				var len = Math.sqrt(((X2-X1)*(X2-X1))+(Y2-Y1)*(Y2-Y1));	 //Distance Formula
+				if(lengthRatio==0)
+					return len;
+				else
+					return (len/lengthRatio).toFixed(2);
+			}
+
+			function LengthShow(){
+
+				for(var j=0;j<=pc;j++){
+
+					for(var i=2;i<pointsX[j].length+1;i++){
+						c.font = input.fontsize + "px Arial";
+						c.textAlign = "center";
+						c.fillStyle = "red";
+						c.fillText(length[j][i-2] + unitshort, (pointsX[j][i-2] + pointsX[j][i-1])/2, 
+							(pointsY[j][i-2] + pointsY[j][i-1])/2);
+					}
+				
+				}
+			}
+
+			function Area(){	
+
+				var area = 0.0;
+				var j=pointcount-2;
+
+				for(var i=0;i<pointcount-1;i++){
+					area+= (pointsX[pc][j]+pointsX[pc][i])*(pointsY[pc][j]-pointsY[pc][i]);
+					j=i;
+				}
+																													 	
+				area= Math.abs(area/2.0);
+				area=area/(lengthRatio**2);
+				areaAll[pc]=area.toFixed(3);
+				DisplayArea();
+			}
+
+			function DisplayArea(){
+
+				if(mchange==true){
+					for(var i =0; i<pc;i++){
+						areaAll[i]*=0.092903;
+						areaAll[i]=areaAll[i].toFixed(3);
+					}
+					mchange=false;
+				}
+				if(fchange==true){
+					for(var i =0; i<pc;i++){
+						areaAll[i]*=10.7639;
+						areaAll[i]=areaAll[i].toFixed(3);
+					}
+					fchange=false;
+				}
+
+				if(areaAll.length>0){
+					input.Area1= areaAll[0]+ " sq " + unitshort;
+				}
+				if(areaAll.length>1){
+					input.Area2= areaAll[1]+ " sq " + unitshort;
+				}
+				if(areaAll.length>2){
+					input.Area3= areaAll[2]+ " sq " + unitshort;
+				}
+				if(areaAll.length>3){
+					input.Area4= areaAll[3]+ " sq " + unitshort;
+				}
+				if(areaAll.length>4){
+					input.Area5= areaAll[4]+ " sq " + unitshort;
+				}
+				if(areaAll.length>5){
+					input.Area6= areaAll[5]+ " sq " + unitshort;
+				}
+			}
+
+			function CheckComment(){
+
+				if(cmtcount>0){
+				
+					for(var i=1;i<=cmtcount;i++){
+						var inp = document.getElementById("input"+i);
+						inp.focus();
+						inp.addEventListener("click", function() {
+						  		this.focus();
+						  		
+						});
+					}
+
+					dragElement(document.getElementById("mydiv" + cmtcount));
+				}
+				
+			}
+
+			function Road(){
+
+					dragElement(document.getElementById("road" + roadcount));
+			}
+
+			function North(){
+
+					dragElement(document.getElementById("north"));					
+			}
+
+			function dragElement(elmnt) {
+
+			    var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+			    if (document.getElementById(elmnt.id + "header" + cmtcount)) {
+			    	document.getElementById(elmnt.id + "header" + cmtcount).onmousedown = dragMouseDown;
+			    } 
+			    else {
+			    	elmnt.onmousedown = dragMouseDown;
+			    }
+
+				function dragMouseDown(e) {
+				    e = e || window.event;
+				    e.preventDefault();
+				    pos3 = e.clientX;
+				    pos4 = e.clientY;
+				    document.onmouseup = closeDragElement;
+				    document.onmousemove = elementDrag;
+				}
+
+				function elementDrag(e) {
+				    e = e || window.event;
+				    e.preventDefault();
+				    pos1 = pos3 - e.clientX;
+				    pos2 = pos4 - e.clientY;
+				    pos3 = e.clientX;
+				    pos4 = e.clientY;
+				    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+				    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+				}
+
+				function closeDragElement() {
+				    document.onmouseup = null;
+				    document.onmousemove = null;
+			    }
+			}
+
+			//Event Listeners
+
+			if(pointcount>0){
+				canvas.addEventListener("click", clickPosition);
+			}
+			canvas.addEventListener("dblclick", savePosition);
+			canvas.addEventListener("mousedown", startPosition);
+			canvas.addEventListener("mouseup", endPosition);
+			canvas.addEventListener("mousemove", PlotXY);
+			
+		});
+
+	</script>
+</body>
+</html>
